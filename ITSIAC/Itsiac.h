@@ -13,8 +13,8 @@ class Simulation {
 
     private:
         struct DecimalValues {
-            int value1;
-            int value2;
+            int opCode;
+            int operand;
         } myDecimalValues;
         vector<DecimalValues> decimalNumbers;
         vector<string> originalBinaryNumbers;

@@ -47,35 +47,39 @@ void Simulation::convertToDecimal(string binary) {
         currentDecimalValue1 += (binary1[x] - '0') * pow(2, x);
         currentDecimalValue2 += (binary2[x] - '0') * pow(2, x);
     }
-    myDecimalValues.value1 = currentDecimalValue1;
-    myDecimalValues.value2 = currentDecimalValue2;
+    myDecimalValues.opCode = currentDecimalValue1;
+    myDecimalValues.operand = currentDecimalValue2;
     decimalNumbers.push_back(myDecimalValues);
 }
 
 void Simulation::printInitialData(ofstream &outputFile) {
     outputFile << "Decimal numbers";
-    outputFile << setw(30);
+    outputFile << setw(35);
     outputFile << "Binary Equivalent" << endl;
     outputFile << "----------------";
-    outputFile << setw(29);
+    outputFile << setw(33);
     outputFile << "-----------------" << endl;
+
     for(int x = 0; x < decimalNumbers.size(); x++) {
 
-        if(decimalNumbers[x].value1 == 255 && decimalNumbers[x].value2 ==  255) {
-            outputFile << "------" << "                     ";
+        if(decimalNumbers[x].opCode == 255 && decimalNumbers[x].operand ==  255) {
+            outputFile << setw(8) << "------" << right;
+            outputFile << setw(40);
             outputFile << originalBinaryNumbers[x] << endl;
         }
 
-        else if(decimalNumbers[x].value2 == 255) {
-            outputFile << "0" << decimalNumbers[x].value1 << " ";
-            outputFile << "--" << "                     ";
+        else if(decimalNumbers[x].operand == 255) {
+            outputFile << setw(3) << "0" << decimalNumbers[x].opCode << " ";
+            outputFile << setw(3) <<  "--" << right;
+            outputFile << setw(40);
             outputFile << originalBinaryNumbers[x] << endl;
         }
 
         else {
-            outputFile << "0" << decimalNumbers[x].value1 << " ";
-            outputFile << decimalNumbers[x].value2 << "                  ";
-            outputFile << left << setw(30) << originalBinaryNumbers[x] << endl;
+            outputFile << setw(3) <<  "0" << decimalNumbers[x].opCode << " ";
+            outputFile << setw(3) << decimalNumbers[x].operand << right;
+            outputFile << setw(40);
+            outputFile << originalBinaryNumbers[x] << endl;
         }
     
     }

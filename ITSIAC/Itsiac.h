@@ -7,8 +7,9 @@ using namespace std;
 class Simulation {
     public:
         Simulation();
-        void readData(ifstream &);
+        void readMachineLanguageCode(ifstream &);
         void printMachineLanguageCode(ofstream &);
+        void readNumericData(ifstream &);
         void printNumericData(ofstream &);
         void convertToDecimal(string);
 

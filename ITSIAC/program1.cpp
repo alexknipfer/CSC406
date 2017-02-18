@@ -14,8 +14,10 @@ int main() {
     ifstream inputFile("data1.txt");
     ofstream outputFile("output.txt");
 
-    mySimulation.readData(inputFile);
+    mySimulation.readMachineLanguageCode(inputFile);
     mySimulation.printMachineLanguageCode(outputFile);
+
+    mySimulation.readNumericData(inputFile);
     mySimulation.printNumericData(outputFile);
 
     return 0;
@@ -23,7 +25,7 @@ int main() {
 
 //**********************************************************************************
 
-void Simulation::readData(ifstream &inputFile) {
+void Simulation::readMachineLanguageCode(ifstream &inputFile) {
 
         //Receives - input file
         //Task - read data from file
@@ -131,6 +133,59 @@ void Simulation::printMachineLanguageCode(ofstream &outputFile) {
     }
     outputFile << setw(7) << "XXXXX" << endl;
     outputFile << endl;
+}
+
+//**********************************************************************************
+
+void Simulation::readNumericData(ifstream &inputFile) {
+    string binary;
+    string binaryInverted;
+    int decimalValue = 0;
+
+    inputFile >> binary;
+    cout << binary << endl;
+
+        //checkt o see if the binary value is negative
+    if(binary[0] == '1') {
+
+            //invert the binary for 2's complement conversion
+        for(int x = 0; x < binary.length(); x++) {
+            if(binary[x] == '1') {
+                binaryInverted += '0';
+            }
+            else {
+                binaryInverted += '1';
+            }
+        }
+
+            //reverse order to calculate decimal
+        reverse(binaryInverted.begin(), binaryInverted.end());
+
+            //convert to decimal
+        for(int x = 0; x < binaryInverted.length(); x++) {
+            decimalValue += (binaryInverted[x] - '0') * pow(2, x);
+        }
+
+            //make decimal value negative and add 1 since we converted/
+            //from 2's complement to decimal
+        decimalValue += 1;
+        decimalValue *= -1;
+
+        cout << decimalValue << endl;
+    }
+
+    else {
+        cout << "hello" << endl;
+            //reverse order to calculate decimal
+        reverse(binary.begin(), binary.end());
+
+            //convert to decimal
+        for(int x = 0; x < binary.length(); x++) {
+            decimalValue += (binary[x] - '0') * pow(2, x);
+        }
+
+        cout << decimalValue << endl;
+    }
 }
 
 //**********************************************************************************

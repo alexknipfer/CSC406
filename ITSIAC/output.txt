@@ -21,3 +21,7 @@ Decimal numbers                  Binary Equivalent
   ------                        1111111111111111
   00   1                        0000000000000001
   03  99                        0000001101100011
+  XXXXX
+
+Decimal        Binary Equivalent        Decimal           Binary Equivalent
+-----------    ---------------         -----------        ---------------    

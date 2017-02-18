@@ -8,7 +8,8 @@ class Simulation {
     public:
         Simulation();
         void readData(ifstream &);
-        void printInitialData(ofstream &);
+        void printMachineLanguageCode(ofstream &);
+        void printNumericData(ofstream &);
         void convertToDecimal(string);
 
     private:

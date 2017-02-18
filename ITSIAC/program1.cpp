@@ -15,7 +15,8 @@ int main() {
     ofstream outputFile("output.txt");
 
     mySimulation.readData(inputFile);
-    mySimulation.printInitialData(outputFile);
+    mySimulation.printMachineLanguageCode(outputFile);
+    mySimulation.printNumericData(outputFile);
 
     return 0;
 }
@@ -87,7 +88,7 @@ void Simulation::convertToDecimal(string binary) {
 
 //**********************************************************************************
 
-void Simulation::printInitialData(ofstream &outputFile) {
+void Simulation::printMachineLanguageCode(ofstream &outputFile) {
 
         //Receives - output file
         //Task - prints out the intitial "Program" data
@@ -128,4 +129,30 @@ void Simulation::printInitialData(ofstream &outputFile) {
         }
     
     }
+    outputFile << setw(7) << "XXXXX" << endl;
+    outputFile << endl;
+}
+
+//**********************************************************************************
+
+void Simulation::printNumericData(ofstream &outputFile) {
+
+        //Receives - output file
+        //Task - prints out the numeric data
+        //Returns - nothing
+
+        //print header for rows
+    outputFile << "Decimal";
+    outputFile << setw(25);
+    outputFile << "Binary Equivalent";
+    outputFile << setw(15);
+    outputFile << "Decimal";
+    outputFile << setw(28);
+    outputFile << "Binary Equivalent" << endl;
+
+    outputFile << "-----------    ";
+    outputFile << "---------------         ";
+    outputFile << "-----------        ";
+    outputFile << "---------------    ";
+
 }

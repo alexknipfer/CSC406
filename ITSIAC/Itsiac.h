@@ -9,7 +9,7 @@ class Simulation {
         Simulation();
         void readMachineLanguageCode(ifstream &);
         void printMachineLanguageCode(ofstream &);
-        void readNumericData(ifstream &);
+        void processNumericData(ifstream &);
         void printNumericData(ofstream &);
         void convertToDecimal(string);
 

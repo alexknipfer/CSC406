@@ -17,7 +17,7 @@ int main() {
     mySimulation.readMachineLanguageCode(inputFile);
     mySimulation.printMachineLanguageCode(outputFile);
 
-    mySimulation.readNumericData(inputFile);
+    mySimulation.processNumericData(inputFile);
     mySimulation.printNumericData(outputFile);
 
     return 0;
@@ -137,7 +137,7 @@ void Simulation::printMachineLanguageCode(ofstream &outputFile) {
 
 //**********************************************************************************
 
-void Simulation::readNumericData(ifstream &inputFile) {
+void Simulation::processNumericData(ifstream &inputFile) {
     string binary;
     string binaryInverted;
     int decimalValue = 0;
@@ -173,15 +173,20 @@ void Simulation::readNumericData(ifstream &inputFile) {
             decimalValue += 1;
             decimalValue *= -1;
 
+                //add decimal and original binary values to vectors
+                //for printing
             decimalNumericData.push_back(decimalValue);
             binaryNumericData.push_back(binary);
 
+                //reset binary and decimal values for next read
             binaryInverted = "";
             decimalValue = 0;
         }
 
+            //binary value read in is NOT negative
         else {
 
+                //temp for binary reversal
             string binaryReverse = binary;
 
                 //reverse order to calculate decimal
@@ -192,9 +197,12 @@ void Simulation::readNumericData(ifstream &inputFile) {
                 decimalValue += (binaryReverse[x] - '0') * pow(2, x);
             }
 
+                //add decimal and original binary values to vectors
+                //for printing
             decimalNumericData.push_back(decimalValue);
             binaryNumericData.push_back(binary);
 
+                //reset decimal value
             decimalValue = 0;
         }
     }
@@ -222,20 +230,20 @@ void Simulation::printNumericData(ofstream &outputFile) {
     outputFile << "--------      ";
     outputFile << "---------------    " << endl;
 
+        //go through numeric data vectors for printing
     for(int x = 0; x < decimalNumericData.size(); x++) {
 
+            //print on a new line for every two pieces
+            //of data (have two numeric values per line)
         if(x % 2 == 0 && x > 0) {
             outputFile << endl;
         }
 
+            //print the decimal and binary values
         outputFile << setw(6) << right << decimalNumericData[x];
         outputFile << setw(24);
         outputFile << binaryNumericData[x];
         outputFile << "  ";
     }
-
-    //cout << binary << endl;
-    //cout << decimalValue << endl;
-    //cout << endl;
 
 }

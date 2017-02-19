@@ -51,7 +51,7 @@ void Simulation::readMachineLanguageCode(ifstream &inputFile) {
 }
 
 Simulation::Simulation() {
-    //constructor
+    NUMERIC_DATA = 50;
 }
 
 //**********************************************************************************
@@ -142,49 +142,61 @@ void Simulation::readNumericData(ifstream &inputFile) {
     string binaryInverted;
     int decimalValue = 0;
 
-    inputFile >> binary;
-    cout << binary << endl;
+        //go through series of 50 numbers
+    for(int x = 0; x < NUMERIC_DATA; x++ ) {
+        
+        inputFile >> binary;
 
-        //checkt o see if the binary value is negative
-    if(binary[0] == '1') {
+            //check to see if the binary value is negative
+        if(binary[0] == '1') {
 
-            //invert the binary for 2's complement conversion
-        for(int x = 0; x < binary.length(); x++) {
-            if(binary[x] == '1') {
-                binaryInverted += '0';
+                //invert the binary for 2's complement conversion
+            for(int x = 0; x < binary.length(); x++) {
+                if(binary[x] == '1') {
+                    binaryInverted += '0';
+                }
+                else {
+                    binaryInverted += '1';
+                }
             }
-            else {
-                binaryInverted += '1';
+
+                //reverse order to calculate decimal
+            reverse(binaryInverted.begin(), binaryInverted.end());
+
+                //convert to decimal
+            for(int x = 0; x < binaryInverted.length(); x++) {
+                decimalValue += (binaryInverted[x] - '0') * pow(2, x);
             }
+
+                //make decimal value negative and add 1 since we converted/
+                //from 2's complement to decimal
+            decimalValue += 1;
+            decimalValue *= -1;
+
+            decimalNumericData.push_back(decimalValue);
+            binaryNumericData.push_back(binary);
+
+            binaryInverted = "";
+            decimalValue = 0;
         }
 
-            //reverse order to calculate decimal
-        reverse(binaryInverted.begin(), binaryInverted.end());
+        else {
 
-            //convert to decimal
-        for(int x = 0; x < binaryInverted.length(); x++) {
-            decimalValue += (binaryInverted[x] - '0') * pow(2, x);
+            string binaryReverse = binary;
+
+                //reverse order to calculate decimal
+            reverse(binaryReverse.begin(), binaryReverse.end());
+
+                //convert to decimal
+            for(int x = 0; x < binaryReverse.length(); x++) {
+                decimalValue += (binaryReverse[x] - '0') * pow(2, x);
+            }
+
+            decimalNumericData.push_back(decimalValue);
+            binaryNumericData.push_back(binary);
+
+            decimalValue = 0;
         }
-
-            //make decimal value negative and add 1 since we converted/
-            //from 2's complement to decimal
-        decimalValue += 1;
-        decimalValue *= -1;
-
-        cout << decimalValue << endl;
-    }
-
-    else {
-        cout << "hello" << endl;
-            //reverse order to calculate decimal
-        reverse(binary.begin(), binary.end());
-
-            //convert to decimal
-        for(int x = 0; x < binary.length(); x++) {
-            decimalValue += (binary[x] - '0') * pow(2, x);
-        }
-
-        cout << decimalValue << endl;
     }
 }
 
@@ -198,16 +210,32 @@ void Simulation::printNumericData(ofstream &outputFile) {
 
         //print header for rows
     outputFile << "Decimal";
-    outputFile << setw(25);
+    outputFile << setw(23);
     outputFile << "Binary Equivalent";
-    outputFile << setw(15);
+    outputFile << setw(10);
     outputFile << "Decimal";
-    outputFile << setw(28);
+    outputFile << setw(24);
     outputFile << "Binary Equivalent" << endl;
 
-    outputFile << "-----------    ";
-    outputFile << "---------------         ";
-    outputFile << "-----------        ";
+    outputFile << "--------      ";
     outputFile << "---------------    ";
+    outputFile << "--------      ";
+    outputFile << "---------------    " << endl;
+
+    for(int x = 0; x < decimalNumericData.size(); x++) {
+
+        if(x % 2 == 0 && x > 0) {
+            outputFile << endl;
+        }
+
+        outputFile << setw(6) << right << decimalNumericData[x];
+        outputFile << setw(24);
+        outputFile << binaryNumericData[x];
+        outputFile << "  ";
+    }
+
+    //cout << binary << endl;
+    //cout << decimalValue << endl;
+    //cout << endl;
 
 }

@@ -18,6 +18,12 @@ class Simulation {
             int opCode;
             int operand;
         } myDecimalValues;
+
+        int NUMERIC_DATA;
+
         vector<DecimalValues> decimalNumbers;
         vector<string> originalBinaryNumbers;
+
+        vector<int> decimalNumericData;
+        vector<string> binaryNumericData;
 };

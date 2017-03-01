@@ -138,6 +138,12 @@ void Simulation::printMachineLanguageCode(ofstream &outputFile) {
 //**********************************************************************************
 
 void Simulation::processNumericData(ifstream &inputFile) {
+        //Receives - input file
+        //Task - read in numeric data (2s complement), 
+        //       then convert to decimal and store final
+        //       values in appropriate vectors (decimal and binary)
+        //Returns - nothing
+        
     string binary;
     string binaryInverted;
     int decimalValue = 0;

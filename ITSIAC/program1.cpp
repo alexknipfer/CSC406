@@ -3,6 +3,7 @@
 #include <string>
 #include <cmath>
 #include <iomanip>
+#include <algorithm>
 #include "Itsiac.h"
 
 using namespace std;
@@ -14,49 +15,171 @@ int main() {
     ifstream inputFile("data1.txt");
     ofstream outputFile("output.txt");
 
-    mySimulation.readMachineLanguageCode(inputFile);
-    mySimulation.printMachineLanguageCode(outputFile);
+    mySimulation.readData(inputFile);
+   // mySimulation.printMachineLanguageCode(outputFile);
 
-    mySimulation.processNumericData(inputFile);
-    mySimulation.printNumericData(outputFile);
+    ////mySimulation.processNumericData(inputFile);
+    //mySimulation.printNumericData(outputFile);
 
     return 0;
 }
 
 //**********************************************************************************
 
-void Simulation::readMachineLanguageCode(ifstream &inputFile) {
+//*****************************************************************************************************
+void Simulation::readData(ifstream &inputFile)
+{
+		// Recieves: input file
+		// Task:	reads in data and places into storage
+		// Returns:	nothing
 
-        //Receives - input file
-        //Task - read data from file
-        //Returns - nothing
+        //reads each bit as a character
+	char bitRead;
+	int binaryNumber[16]={0};
 
-    string binaryNumber;
+        //reads first
+	for(int i=0; i<16;i++) {
 
-        //read the current binary number
-    inputFile >> binaryNumber;
+            //ignore whitespace and get next character
+		inputFile >> ws;					
+		inputFile.get(bitRead);
 
-        //read until sentinel is reached
-    while(binaryNumber != "XXXXXXXXXXXXXXXX") {
+		if(bitRead=='0') {
+            binaryNumber[i] = 0;
+        }
+			
+		else if(bitRead == '1') {
+            binaryNumber[i] = 1;
+        }
+			
+		else
+			binaryNumber[i] = 9;
+	}
 
-            //keep a vector of the original binary values
-        originalBinaryNumbers.push_back(binaryNumber);
+        //makes sure sentinel isn't reached
+	while (binaryNumber[0] != 9)
+	{
+		primaryMemory[MLC][0] = convertToDecimal(0, binaryNumber);	//converts first part
+		primaryMemory[MLC][1] = convertToDecimal(1, binaryNumber);	//converts second part
+		MLC++;
+		for(int i = 0; i < 16; i++)
+		{
+			inputFile >> ws;
+			inputFile.get(bitRead);
 
-            //convert the binary to decimal form
-        convertToDecimal(binaryNumber);
+			if (bitRead == '0') {
+                binaryNumber[i]=0;
+            }
+				
+			else if (bitRead == '1') {
+                binaryNumber[i] = 1;
+            }
 
-            //get the next value
-        inputFile >> binaryNumber;
-    }
-}
+			else {
+                binaryNumber[i]=9;
+            }
+		}
+	}
 
-Simulation::Simulation() {
-    NUMERIC_DATA = 50;
+        //gets the next part of data file
+	while(m != 50) {
+		for(int i=0; i<16;i++) {
+			inputFile >> ws;
+			inputFile.get(bitRead);
+
+			if(bitRead=='0') {
+                binaryNumber[i]=0;
+            }
+
+			else if (bitRead=='1') {
+                binaryNumber[i]=1;
+            }
+
+			else {
+                binaryNumber[i]=9;
+            }		
+		}
+
+            //converts the value to decimal and places in primary storage
+		primaryMemory[m + 50][1] = convertToDecimal(3, binaryNumber);
+		m++;
+	}
+
+	for(int x = 0; x < 101; x++) {
+		for(int y = 0; y < 2; y++) {
+			cout << primaryMemory[x][y];
+		}
+		cout << endl;
+
+	}
+	return;
 }
 
 //**********************************************************************************
 
-void Simulation::convertToDecimal(string binary) {
+int Simulation::convertToDecimal(int first, int binary[16]) {
+    int numberValue = 0;
+
+    if(first == 0) {
+        numberValue = 128 * binary[0] + 64 * binary[1] + 32 * binary[2] + 
+                      16 * binary[3] + 8 * binary[4] + 4 * binary[5] + 2 * 
+                      binary[6] + 1 * binary[7];
+		return numberValue;	
+    }
+
+    else if(first == 1) {
+        numberValue = 128 * binary[8] + 64 * binary[9] + 32 * binary[10] + 16
+                          * binary[11] + 8 * binary[12] + 4 * binary[13] + 2 * 
+                          binary[14] + 1 * binary[15];
+    }
+
+    else if(first == 3) {
+
+            //value is postiive
+        if(binary[0] == 0) {
+            numberValue = 8192 * binary[2] + 4096 * binary[3] + 2048 * binary[4] + 1024 * binary[5] + 512 * binary[6] + 256 * binary[7] +
+						128 * binary[8] + 64 * binary[9] + 32 * binary[10] + 16 * binary[11] + 8 * binary[12] + 4 * binary[13] + 2 *
+						binary[14] + 1 * binary[15];
+        }
+
+            //value is negative
+        else {
+            numberValue = 8192 * (binary[2] - 1) + 4096 * (binary[3] - 1) + 2048 * (binary[4]-1) + 1024 * (binary[5] - 1) + 512 *
+						(binary[6] - 1) + 256 * (binary[7] - 1) + 128 * (binary[8] - 1) + 64 * (binary[9] - 1) + 32 * (binary[10] - 1) +
+						16 * (binary[11] - 1) + 8 * (binary[12] - 1) + 4 * (binary[13] - 1) + 2 * (binary[14] - 1) + 1 * (binary[15] - 1) - 1;
+        }
+    }
+
+    return numberValue;
+}
+
+//**********************************************************************************
+
+Simulation::Simulation() {
+    acc1 = 0;
+    acc2 = 0;
+    psiar = 0;
+    sar = 0;
+    sdr1 = 0;
+    sdr2 = 0;
+    tmpr1 = 0;
+    tmpr2 = 0;
+    csiar = 0;
+    mir = 0;
+    mli = 0;
+    micro = 0;
+    MLC = 0;
+    x = 1;
+    m = 0;
+    for (int i = 0; i < 101; i++) {
+        primaryMemory[i][0] = 1000;
+        primaryMemory[i][1] = 1000;
+    }
+}
+
+//**********************************************************************************
+
+/*void Simulation::convertToDecimal(string binary) {
 
         //Given - the binary value to be converted
         //Task - convert a binary number to decimalNumbers
@@ -86,170 +209,6 @@ void Simulation::convertToDecimal(string binary) {
 
         //keep a vector of structures
     decimalNumbers.push_back(myDecimalValues);
-}
+}*/
 
 //**********************************************************************************
-
-void Simulation::printMachineLanguageCode(ofstream &outputFile) {
-
-        //Receives - output file
-        //Task - prints out the intitial "Program" data
-        //Returns - nothing
-
-        //print header for rows
-    outputFile << "Decimal numbers";
-    outputFile << setw(35);
-    outputFile << "Binary Equivalent" << endl;
-    outputFile << "----------------";
-    outputFile << setw(33);
-    outputFile << "-----------------" << endl;
-
-        //print the decimal numbers and binary equivalent
-    for(int x = 0; x < decimalNumbers.size(); x++) {
-
-            //output opcode and operand with binary equivalent
-        if(decimalNumbers[x].opCode == 255 && decimalNumbers[x].operand ==  255) {
-            outputFile << setw(8) << "------" << right;
-            outputFile << setw(40);
-            outputFile << originalBinaryNumbers[x] << endl;
-        }
-
-            //output opcode and operand with binary equivalent
-        else if(decimalNumbers[x].operand == 255) {
-            outputFile << setw(3) << "0" << decimalNumbers[x].opCode << " ";
-            outputFile << setw(3) <<  "--" << right;
-            outputFile << setw(40);
-            outputFile << originalBinaryNumbers[x] << endl;
-        }
-
-            //output opcode and operand with binary equivalent
-        else {
-            outputFile << setw(3) <<  "0" << decimalNumbers[x].opCode << " ";
-            outputFile << setw(3) << decimalNumbers[x].operand << right;
-            outputFile << setw(40);
-            outputFile << originalBinaryNumbers[x] << endl;
-        }
-    
-    }
-    outputFile << setw(7) << "XXXXX" << endl;
-    outputFile << endl;
-}
-
-//**********************************************************************************
-
-void Simulation::processNumericData(ifstream &inputFile) {
-        //Receives - input file
-        //Task - read in numeric data (2s complement), 
-        //       then convert to decimal and store final
-        //       values in appropriate vectors (decimal and binary)
-        //Returns - nothing
-        
-    string binary;
-    string binaryInverted;
-    int decimalValue = 0;
-
-        //go through series of 50 numbers
-    for(int x = 0; x < NUMERIC_DATA; x++ ) {
-        
-        inputFile >> binary;
-
-            //check to see if the binary value is negative
-        if(binary[0] == '1') {
-
-                //invert the binary for 2's complement conversion
-            for(int x = 0; x < binary.length(); x++) {
-                if(binary[x] == '1') {
-                    binaryInverted += '0';
-                }
-                else {
-                    binaryInverted += '1';
-                }
-            }
-
-                //reverse order to calculate decimal
-            reverse(binaryInverted.begin(), binaryInverted.end());
-
-                //convert to decimal
-            for(int x = 0; x < binaryInverted.length(); x++) {
-                decimalValue += (binaryInverted[x] - '0') * pow(2, x);
-            }
-
-                //make decimal value negative and add 1 since we converted/
-                //from 2's complement to decimal
-            decimalValue += 1;
-            decimalValue *= -1;
-
-                //add decimal and original binary values to vectors
-                //for printing
-            decimalNumericData.push_back(decimalValue);
-            binaryNumericData.push_back(binary);
-
-                //reset binary and decimal values for next read
-            binaryInverted = "";
-            decimalValue = 0;
-        }
-
-            //binary value read in is NOT negative
-        else {
-
-                //temp for binary reversal
-            string binaryReverse = binary;
-
-                //reverse order to calculate decimal
-            reverse(binaryReverse.begin(), binaryReverse.end());
-
-                //convert to decimal
-            for(int x = 0; x < binaryReverse.length(); x++) {
-                decimalValue += (binaryReverse[x] - '0') * pow(2, x);
-            }
-
-                //add decimal and original binary values to vectors
-                //for printing
-            decimalNumericData.push_back(decimalValue);
-            binaryNumericData.push_back(binary);
-
-                //reset decimal value
-            decimalValue = 0;
-        }
-    }
-}
-
-//**********************************************************************************
-
-void Simulation::printNumericData(ofstream &outputFile) {
-
-        //Receives - output file
-        //Task - prints out the numeric data
-        //Returns - nothing
-
-        //print header for rows
-    outputFile << "Decimal";
-    outputFile << setw(23);
-    outputFile << "Binary Equivalent";
-    outputFile << setw(10);
-    outputFile << "Decimal";
-    outputFile << setw(24);
-    outputFile << "Binary Equivalent" << endl;
-
-    outputFile << "--------      ";
-    outputFile << "---------------    ";
-    outputFile << "--------      ";
-    outputFile << "---------------    " << endl;
-
-        //go through numeric data vectors for printing
-    for(int x = 0; x < decimalNumericData.size(); x++) {
-
-            //print on a new line for every two pieces
-            //of data (have two numeric values per line)
-        if(x % 2 == 0 && x > 0) {
-            outputFile << endl;
-        }
-
-            //print the decimal and binary values
-        outputFile << setw(6) << right << decimalNumericData[x];
-        outputFile << setw(24);
-        outputFile << binaryNumericData[x];
-        outputFile << "  ";
-    }
-
-}

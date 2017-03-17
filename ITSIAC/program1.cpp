@@ -48,6 +48,10 @@ int main() {
 
 Simulation::Simulation() {
 
+        //Recieves - nothing
+        //Task - constructor
+        //Returns - nothing
+
     acc1 = 0;
     acc2 = 0;
     psiar = 0;
@@ -71,8 +75,26 @@ Simulation::Simulation() {
 }
 
 //*****************************************************************************************************
-void Simulation::readData(ifstream &inputFile)
-{
+
+void Simulation::loadVectors() {
+
+        //Recieves - nothing
+        //Task - loads initial vector for initial operation (fetch and increment)
+        //Returns - nothing
+
+    executeValue.push_back(8);
+    executeValue.push_back(25);
+    executeValue.push_back(21);
+    executeValue.push_back(23);
+    executeValue.push_back(20);
+    executeValue.push_back(18);
+    executeValue.push_back(28);
+}
+
+//*****************************************************************************************************
+
+void Simulation::readData(ifstream &inputFile) {
+
 		//Recieves - input file
 		//Task - reads in data file, places values into "primary storage"
 		//Returns - nothing
@@ -161,8 +183,8 @@ void Simulation::readData(ifstream &inputFile)
 
 //**********************************************************************************
 
-void Simulation::doHalt()
-{
+void Simulation::doHalt() {
+
         //Recieves - output file
         //Task - perform halt execution
         //Returns - nothing
@@ -172,8 +194,8 @@ void Simulation::doHalt()
 
 //**********************************************************************************
 
-void functionsClass::executeRead()
-{
+void functionsClass::executeRead() {
+
         //Recieves - nothing
         //Task - execute read from storage
         //Returns - nothing
@@ -191,7 +213,7 @@ void functionsClass::executeRead()
 
 //**********************************************************************************
 
-void functionsClass::executeWrite()
+void functionsClass::executeWrite() 
 {
         //Recieves - nothing
         //Task - executes from control storage
@@ -209,13 +231,15 @@ void functionsClass::executeWrite()
 
 //**********************************************************************************
 
-void Simulation::fetchAndIncrement(ofstream &outputFile)
-{
+void Simulation::fetchAndIncrement(ofstream &outputFile) {
+
         //Recieves - output file
         //Task - executes from stroage for fetch and increment
         //Returns - nothing
 
     for(int x = 0; x < executeValue.size(); x++) {
+
+            //execute from control storage
         programExecution(executeValue[x], outputFile)
     }
 
@@ -225,13 +249,15 @@ void Simulation::fetchAndIncrement(ofstream &outputFile)
 
 //**********************************************************************************
 
-void Simulation::executeAdd(ofstream &outputFile)
-{
+void Simulation::executeAdd(ofstream &outputFile) {
+
         //Recieves - output file
         //Task - execute add
         //Returns - nothing
 
     for(int x = 0; x < executeValueAdd.size(); x++) {
+
+            //execute from control storage
         programExecution(executeValueAdd[x], outputFile)
     }
 
@@ -241,13 +267,15 @@ void Simulation::executeAdd(ofstream &outputFile)
 
 //**********************************************************************************
 
-void Simulation::executeSubtract(ofstream &outputFile)
-{
+void Simulation::executeSubtract(ofstream &outputFile) {
+
         //Recieves - output file
         //Task - execute subtraction
         //Returns - nothing
 
     for(int x = 0; x < executeValueSubtract.size(); x++) {
+
+            //execute from control storage
         programExecution(executeValueSubtract[x], outputFile)
     }
 
@@ -257,13 +285,15 @@ void Simulation::executeSubtract(ofstream &outputFile)
 
 //**********************************************************************************
 
-void Simulation::executeLoad(ofstream &outputFile)
-{
+void Simulation::executeLoad(ofstream &outputFile) {
+
         //Recieves - output file
         //Task - execute load
         //Returns - nothing
 
     for(int x = 0; x < executeValueLoad.size(); x++) {
+
+            //execute from control storage
         programExecution(executeValueLoad[x], outputFile)
     }
 
@@ -273,13 +303,15 @@ void Simulation::executeLoad(ofstream &outputFile)
 
 //**********************************************************************************
 
-void Simulation::executeStore(ofstream &outputFile)
-{
+void Simulation::executeStore(ofstream &outputFile) {
+
         //Recieves - output file
         //Task - execute store
         //Returns - nothing
 
     for(int x = 0; x < executeValueStore.size(); x++) {
+
+            //execute from control storage
         programExecution(executeValueStore[x], outputFile)
     }
 
@@ -289,13 +321,15 @@ void Simulation::executeStore(ofstream &outputFile)
 
 //**********************************************************************************
 
-void Simulation::executeBranch(ofstream &outputFile)
-{
+void Simulation::executeBranch(ofstream &outputFile) {
+
         //Recieves - output file
         //Task - execute store
         //Returns - nothing
 
     for(int x = 0; x < executeValueBranch.size(); x++) {
+
+            //execute from control storage
         programExecution(executeValueBranch[x], outputFile)
     }
 
@@ -326,7 +360,7 @@ int Simulation::convertToDecimal(int binary[16]) {
 
 //**********************************************************************************
 
-void Simulation::convertToHex(int num)
+void Simulation::convertToHex(int num) 
 {
         //Recieves - decimal value to be converted
         //Task - converts a decimal number to hexadecimal and places in vector
@@ -453,12 +487,16 @@ void Simulation::outputData(ofstream &outputFile) {
         }			
 			
 	}
+
+    outputFile << endl;
+    outputFile <<  machineLanguageCounter << endl;
+    outputFile <<  microCodeCounter << endl;
+    outputFile << endl;
 }
 
 //**********************************************************************************
 
-void Simulation::programExecution(int OpCode, ofstream &out)
-{
+void Simulation::programExecution(int OpCode, ofstream &out) {
     
 	//Recieves - operation code ,output file
 	//Task - executes the given operation
@@ -723,13 +761,12 @@ void Simulation::programExecution(int OpCode, ofstream &out)
             microCodeCounter++;
             break;
 	}
-	return;
 }
 
 //**********************************************************************************
 
-void printHeader(ofstream &outputFile) 
-{
+void printHeader(ofstream &outputFile) {
+
 		// Receive the output file
 		// Task - print header
 		// Return - Nothing
@@ -749,8 +786,8 @@ void printHeader(ofstream &outputFile)
 
 //**********************************************************************************
 
-void printFooter(ofstream &outputFile) 
-{
+void printFooter(ofstream &outputFile) {
+
 		// Receives - the output file
 		// Task - print footer
 		// Return - Nothing

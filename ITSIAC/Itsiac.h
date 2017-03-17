@@ -15,12 +15,12 @@ class Simulation {
 		void executeLoad(ofstream &);
 		void executeStore(ofstream &);
 		void executeBranch(ofstream &);
+		void loadVectors();
 		void outputData(ofstream &);
 		void doHalt();
 		void programExecution(int, ofstream &);
 		void executeRead();
 		void executeWrite();
-		void MLO(int, ofstream &);
 		void readData(ifstream &);
 
 	private:
